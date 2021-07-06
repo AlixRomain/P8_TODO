@@ -10,12 +10,10 @@
 
     <title>To Do List app</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
-
+    <link rel="stylesheet" href="{{ asset('asset/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/bootstrap/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/bootstrap/css/custom.css') }}">
+    <link href="{{ asset('asset/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -25,12 +23,13 @@
 </head>
 
 <body>
+{% include "waves/waves.html.twig" %}
 <nav class="navbar navbar-light navbar-fixed-top" style="background-color: #e3f2fd;" role="navigation">
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">To Do List app</a>
 
-            <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
+            <img src="{{ asset('asset/img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" />
         </div>
     </div>
 </nav>
@@ -45,7 +44,7 @@
         {% endif %}
 
         {% if not app.user and 'login' != app.request.attributes.get('_route') %}
-            <a href="{{ path('login') }}" class="btn btn-success">Se connecter</a>
+            <a href="{#{{ path('login') }}#}" class="btn btn-success">Se connecter</a>
         {% endif %}
     </div>
 
@@ -64,11 +63,11 @@
             {% endfor %}
 
             {% block header_title %}{% endblock %}
-            {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
+            {% block header_img %}<img class="slide-image" src="{{ asset('asset/img/todolist_homepage.jpg') }}" alt="todo list">{% endblock %}
         </div>
     </div>
 
-    <br />
+    <br/>
 
     <div class="row">
         <div class="col-md-12">

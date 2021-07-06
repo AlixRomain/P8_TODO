@@ -1,0 +1,26 @@
+:host {
+    position: absolute;
+    bottom: -300vh;
+    right: 0;
+    left: -15vh;
+    pointer-events: none;
+    z-index: -1;
+    width: 200%;
+}
+
+svg {
+    transform: scaleY(-18);
+    transform: scaleX(-13);
+    transform: rotate(190deg);
+}
+
+.background-container-photo {
+    background-blend-mode: screen;
+    background: #196377 url("./assets/back.jpg") no-repeat bottom ;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    opacity: 0.5;
+    z-index: -1!important;
+}
+
