@@ -1,0 +1,246 @@
+/*-------------DEBUT CSS COMMENTAIRES -----------------------*/
+.trash:hover{
+    color: red!important;
+}
+.card-no-border .card {
+    border: 0px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)
+}
+
+.comment:nth-child(2n + 2) {
+    background: #5c636a;
+    overflow: hidden;
+}
+.comment:hover{
+    background: #4f5050;
+    overflow: hidden;
+}
+.comment:hover  h5{
+   color: #F5F5F5;
+}
+
+.comment-row{
+    width: 100%;
+}
+
+.comment-widgets:hover {
+    background: rgba(0, 0, 0, 0.02);
+    cursor: pointer
+}
+
+.comment-widgets {
+    border-bottom: 1px solid rgba(120, 130, 140, 0.13);
+    padding: 0 15px
+}
+
+.comment-text{
+    text-align: left!important;
+}
+.comment-text:hover {
+    visibility: hidden
+}
+
+.comment-text:hover {
+    visibility: visible
+}
+
+.label {
+    padding: 3px 10px;
+    line-height: 13px;
+    color: #ffffff;
+    font-weight: 400;
+    border-radius: 4px;
+    font-size: 75%
+}
+
+.round img {
+    border-radius: 100%
+}
+
+.label-info {
+    background-color: #1976d2
+}
+
+.label-success {
+    background-color: green
+}
+
+.label-danger {
+    background-color: #ef5350
+}
+
+.action-icons a {
+    padding-left: 7px;
+    vertical-align: middle;
+    color: #99abb4
+}
+
+.action-icons a:hover {
+    color: #F5F5F5;
+}
+
+.mt-100 {
+    margin-top: 50px
+}
+
+.mb-100 {
+    margin-bottom: 50px
+}
+
+/*---------FIN CSS COMMENTAIRE----------------------------*/
+.avatar{
+    width: 200px;
+    border-radius: 50%;
+    border: 8px inset #4f5050;
+}
+.container-90{
+    width: 90%;
+    margin: auto;
+}
+
+header.masthead .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #212529;
+    opacity: .5;
+}
+.apoper, .popover{
+    max-width: 800px;
+}
+.minHeightSelect{
+    min-height: 200px;
+}
+.effetBtn{
+    background-image: linear-gradient(#8a9196,#7a8288 60%,#70787d);
+    background-repeat: no-repeat;
+    filter: none;
+    border-color: rgba(0,0,0,.6);
+    text-shadow: 1px 1px 1px rgba(0,0,0,.3);
+    border: 1px solid transparent;
+    display: inline-block;
+    font-weight: 400;
+    color: #ffffff;
+    text-align: center;
+    vertical-align: middle;
+    padding: .75rem 1rem;
+    font-size: .9375rem;
+    line-height: 1.5;
+    border-radius: .45rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+header.masthead {
+    margin-bottom: 50px;
+    background: no-repeat center center;
+    background-color: #868e96;
+    background-attachment: scroll;
+    position: relative;
+    background-size: cover;
+}
+header.masthead .page-heading, header.masthead .site-heading {
+    text-align: center;
+    padding: 45vh 0;
+}
+
+.mouseHover, .mouseHoverShow{
+    display: none;
+}
+
+.hover, .hoverShow,.hoverAuth{
+    cursor: pointer;
+}
+.hoverGris{
+    padding: 12px 16px;
+    border-radius: 2px;
+}
+.hoverGris:hover{
+    background:#7A8288;
+    color: white !important;
+}
+.hover:hover > .mouseHover{
+    display: block;
+    background-color: #5c636a;
+    padding: 55px  5px 0;
+    transition: 0.3s;
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: calc(100% - 143px);
+}
+#encreComments{
+    cursor: pointer;
+    color: white;
+ }
+.hoverAuth:hover > .mouseHoverAuth{
+    display: block;
+    background-color: #5c636a;
+    padding: 55px  5px 0;
+    transition: 0.3s;
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: calc(100% - 205px);
+}
+.cursor{
+    cursor: pointer;
+}
+#navbarColor03 li>a:hover{
+    color: white!important;
+}
+.hoverShow:hover > .mouseHoverShow{
+    display: block;
+    background-color: #5c636a;
+    position: absolute;
+    padding: 10px;
+    z-index: 1000;
+    width:100%;
+    left: 0;
+}
+
+.mediaSize{
+    width: 100%;
+    min-height: 315px;
+}
+
+#seeMedia, #avatar_dashboard_mobile{
+    display: none;
+}
+
+
+/* Gestion des vues formats mobiles */
+@media (max-width: 576px) {
+
+    #avatar_dashboard_mobile {
+        display: block;
+    }
+    #avatar_dashboard_mobile > #mainImage{
+        display: block;
+        width: 60px;
+        border-radius: 50%;
+        border: 2px inset #4f5050;
+    }
+    #dashboard_nav_admin{
+        display: none;
+    }
+    .mediaSize{
+        width: 100%;
+        min-height: unset;
+    }
+    #carMedia{
+        display: none;
+    }
+    #seeMedia{
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+

@@ -4,7 +4,7 @@ security:
             algorithm: bcrypt
 
     # https://symfony.com/doc/current/security/experimental_authenticators.html
-    enable_authenticator_manager: true
+    #enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -20,8 +20,8 @@ security:
             lazy: true
             provider: app_user_provider
             guard:
-                authenticator:
-                    App\Security\SecurityAuthenticator
+                authenticators:
+                    - App\Security\SecurityAuthenticator
             logout:
                 path: app_logout
                 target: home
