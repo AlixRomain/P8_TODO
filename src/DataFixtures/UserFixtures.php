@@ -26,7 +26,7 @@ class UserFixtures extends Fixture
         $userSuperAdmin = new User;
         $userSuperAdmin->setName('SuperAdmin');
 
-        $password = $this->encoder->hash('SuperAdmin34!');
+        $password = $this->encoder->hashPassword($userSuperAdmin,'OpenClass21!');
         $userSuperAdmin->setPassword($password);
 
         $userSuperAdmin->setEmail('superadmin@gmail.com');
@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
         $userAdmin = new User;
         $userAdmin->setName('Admin');
 
-        $password = $this->encoder->hash('Admin34!');
+        $password = $this->encoder->hashPassword($userAdmin,'OpenClass21!');
         $userAdmin->setPassword($password);
 
         $userAdmin->setEmail('admin@gmail.com');
@@ -50,7 +50,7 @@ class UserFixtures extends Fixture
         $userAnon = new User;
         $userAnon->setName('UserAnon');
 
-        $password = $this->encoder->hash('UserAnon34!');
+        $password = $this->encoder->hashPassword($userAnon,'OpenClass21!');
         $userAnon->setPassword($password);
 
         $userAnon->setEmail('user-anon@gmail.com');
@@ -62,7 +62,7 @@ class UserFixtures extends Fixture
         $user = new User;
         $user->setName('User');
 
-        $password = $this->encoder->hash('User340!');
+        $password = $this->encoder->hashPassword($user,'OpenClass21!!');
         $user->setPassword($password);
 
         $user->setEmail('user@gmail.com');
