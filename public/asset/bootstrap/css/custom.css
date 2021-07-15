@@ -16,11 +16,11 @@ svg {
 
 .background-container-photo {
     background-blend-mode: screen;
-    background: #196377 url("./assets/back.jpg") no-repeat bottom ;
+    background: #196377 url("../../img/img-1.jpg") no-repeat bottom ;
     height: 100vh;
     width: 100%;
     position: fixed;
     opacity: 0.5;
-    z-index: -1!important;
+    z-index: -2!important;
 }
 
