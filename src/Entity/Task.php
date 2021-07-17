@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,6 +24,29 @@ class Task
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $deadLine;
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getDeadLine()
+    {
+        return $this->deadLine;
+    }
+
+    /**
+     * @param mixed $deadLine
+     */
+    public function setDeadLine($deadLine): void
+    {
+        $this->deadLine = $deadLine;
+    }
 
     /**
      * @ORM\Column(type="string")
@@ -44,6 +69,13 @@ class Task
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tasks")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="targetTask")
+     */
+    private $targetUser;
+
+
 
     public function __construct()
     {
@@ -131,4 +163,18 @@ class Task
 
         return $this;
     }
+
+    public function getTargetUser(): ?User
+    {
+        return $this->targetUser;
+    }
+
+    public function setTargetUser(?User $targetUser): self
+    {
+        $this->targetUser = $targetUser;
+
+        return $this;
+    }
+
+
 }

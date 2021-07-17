@@ -2,22 +2,21 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Task;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture
 {
-    public const SUPER_ADMIN_USER_REFERENCE = 'super-admin-user';
-    public const ADMIN_USER_REFERENCE = 'admin-user';
-    public const USER_REFERENCE = 'user';
-    public const ANON_USER_REFERENCE = 'user-anon';
-
     private $encoder;
+    private $repoUser;
 
-    public function __construct(UserPasswordHasherInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $encoder, UserRepository $userRepository)
     {
         $this->encoder = $encoder;
+        $this->repoUser = $userRepository;
     }
 
     public function load(ObjectManager $manager)
@@ -72,8 +71,26 @@ class UserFixtures extends Fixture
 
         $manager->flush();
 
-        $this->addReference(self::ADMIN_USER_REFERENCE, $userAdmin);
-        $this->addReference(self::ANON_USER_REFERENCE, $userAnon);
-        $this->addReference(self::USER_REFERENCE, $user);
+
+        $users = $this->repoUser->findAll();
+        foreach ($users as $user ){
+
+            for ($i = 0; $i < 2; $i++) {
+                $date 		= new \DateTime();
+                ($i % 2 == 0)?$toto = true : $toto = false;
+
+                $task = new Task();
+                $task->setCreatedAt(new \DateTime());
+                $task->setDeadLine($date->setTimestamp(strtotime("+15 days")));
+                $task->setTitle('Tâche_' . ($i + 1));
+                $task->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
+                $task->setIsDone($toto);
+                $task->setUser($user);
+                ($i % 2 == 0)?$task->setTargetUser($users[rand(0,3)]) : '';
+                $manager->persist($task);
+            }
+        }
+
+        $manager->flush();
     }
 }

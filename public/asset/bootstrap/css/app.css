@@ -255,6 +255,15 @@ header.masthead .page-heading, header.masthead .site-heading {
         display: block;
         margin: 0 auto;
     }
+    .card-header-2{
+        background-color: limegreen!important;
+        border-bottom: none;
+        font-weight: 700;
+        padding: .875rem 2rem;
+        margin-bottom: 0;
+        color: #fff;
+        border-bottom: 1px solid rgba(255,255,255,.2);
+    }
 }
 
 
