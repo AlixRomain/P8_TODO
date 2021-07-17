@@ -1,0 +1,34 @@
+{% block nav %}
+<nav id="navbarColor01" class="navbar navbar-expand-lg navbar-light bg-light ">
+    <div class="container-fluid container">
+        <a class="navbar-brand d-flex justify-content-between"  href="#">
+            <p class="navbar-brand">To Do List app</p>
+            <img src="{{ asset('asset/img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse " id="navbarColor03">
+            <ul class="navbar-nav m-lg-auto">
+                <li class="nav-item  m-lg-auto p-2">
+                    <a href="{{ path('user_create') }}" class="btn btn-primary btn-back-pink">Créer un utilisateur</a>
+                </li>
+                <li class="nav-item mr-3 p-2">
+                    <a href="{{ path('user_create') }}" class="btn btn-primary btn-back-pink">Créer une tâche</a>
+                </li>
+                <li class="nav-item p-2">
+
+                    {% if app.user %}
+                        <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger btn-back-orange">Se déconnecter</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn btn-success btn-back-green">Se connecter</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+
+
