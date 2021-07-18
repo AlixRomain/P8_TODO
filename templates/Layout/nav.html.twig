@@ -15,7 +15,7 @@
                         <a href="{{ path('user_list') }}" class="btn btn-primary btn-back-pink">Utilisateur</a>
                     </li>
                     <li class="nav-item mr-3 p-2">
-                        <a href="{{ path('task_list') }}" class="btn btn-primary btn-back-pink">Tâche</a>
+                        <a href="{{ path('task_list', {'param' : 'all'})  }}" class="btn btn-primary btn-back-pink">Tâche</a>
                     </li>
                 {% endif %}
                 <li class="nav-item p-2">

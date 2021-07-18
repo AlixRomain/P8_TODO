@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Form\FilterType;
 use App\Form\TaskType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,11 +12,42 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractController
 {
     /**
-     * @Route("/tasks", name="task_list")
+     * @Route("/tasks/{param}", name="task_list")
+     * @param $param string
      */
-    public function listAction()
+    public function listAction($param, Request $request)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('App:Task')->findAll()]);
+
+        $form = $this->createForm(FilterType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $param = $request->get('filter')['filter'];
+            switch ($param) {
+                case 'all':
+                    break;
+                case 0:
+                    $param = $this->getDoctrine()->getRepository('App:Task')->findBy([],['deadLine' => 'DESC']);
+                    break;
+                case 1:
+                    $param = $this->getDoctrine()->getRepository('App:Task')->findBy(['id' =>'id > 0']);
+                    break;
+                case 2:
+                    $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => 1]);
+                    break;
+                case 3:
+                    $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => 0]);
+                    break;
+            }
+        }
+        ($param =='all')?$toto = true: $toto = null;
+
+            return $this->render('task/list.html.twig',
+                                 [
+                                     'tasks' => ($toto)?$this->getDoctrine()->getRepository('App:Task')->findAll():$param,
+                                     'form' =>  $form->createView()
+                                 ]);
     }
 
     /**
