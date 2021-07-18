@@ -79,9 +79,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tasks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="targetUser")
+     */
+    private $targetTask;
+
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->targetTask = new ArrayCollection();
     }
 
     /**
@@ -223,4 +230,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return [['ROLE_USER'], ['ROLE_ADMIN']];
     }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTargetTask(): Collection
+    {
+        return $this->targetTask;
+    }
+
+    public function addTargetTask(Task $targetTask): self
+    {
+        if (!$this->targetTask->contains($targetTask)) {
+            $this->targetTask[] = $targetTask;
+            $targetTask->setTargetUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTargetTask(Task $targetTask): self
+    {
+        if ($this->targetTask->removeElement($targetTask)) {
+            // set the owning side to null (unless already changed)
+            if ($targetTask->getTargetUser() === $this) {
+                $targetTask->setTargetUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
