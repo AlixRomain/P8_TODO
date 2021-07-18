@@ -3,12 +3,14 @@
 {% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
 
 {% block body %}
+    <h3 class="mb-3">Liste des tâches par toto </h3>
     <div class="row">
         <div class="col-md-6 mb-5">
-            {{ app.user.name }}
+            <p>Tâches total {{ tasks|length }}</p>
+            <p>Tâche assigné à {{ app.user.name }} : </p>
         </div>
         <div class="col-md-6 justify-content-lg-between">
-            {{ form_start(form, {'action' : path('task_list', {'param' : 'all'})}) }}
+            {{ form_start(form, {'action' :path('all_tasks', {'param' : 'all'})}) }}
             {{ form_row(form.filter) }}
             <a href="{{ path('task_create') }}" class="btn d-inline-block btn-info pull-right"><i class="fas fa-tasks mr-3"></i>  +  Créer une tâche</a>
             <button type="submit" class="m-lg-2 btn btn-success pull-right d-inline-block">Go</button>
@@ -18,7 +20,6 @@
     <hr>
 
     <div class="row ">
-        <h3 class="mb-3">Liste des tâches par toto</h3>
         {% for task in tasks %}
             <div class="col-sm-4 col-lg-4 col-md-4">
                 <div class="thumbnail">
