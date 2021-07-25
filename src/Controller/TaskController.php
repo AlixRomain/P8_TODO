@@ -80,9 +80,6 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            var_dump($request->get('targetUser'));
-           var_dump($task->getcontent());
-
             $task->setUser($this->getUser());
             $em->persist($task);
             $em->flush();

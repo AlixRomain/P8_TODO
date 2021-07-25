@@ -16,9 +16,6 @@ class TaskType extends AbstractType
     {
         $choice = [];
         $choiceClass=[];
-     /*   array_push($choice,[
-            'Ouverte à tous' =>  'default'
-        ]);*/
         foreach ($options['users'] as $val){
             array_push($choice,[ $val->getName() =>  $val]);
             array_push($choiceClass, [$val->getName() => ['class' => 'optio']]);
