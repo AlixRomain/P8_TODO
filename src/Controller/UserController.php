@@ -3,9 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\FilterUserType;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -15,23 +20,51 @@ class UserController extends AbstractController
 {
     private $em;
     private $hasher;
+    private $repoUser;
 
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $hashe)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $hashe, UserRepository $repoUser)
     {
         $this->em = $entityManager;
         $this->hasher = $hashe;
+        $this->repoUser = $repoUser;
+
     }
 
     /**
-     * @Route("/users", name="user_list")
+     * @Route("/users-all/{param}", name="all-users")
+     * @IsGranted("ROLE_ADMIN")
+     * @param $param string
      */
-    public function listAction()
+    public function listAction($param, Request $request)
     {
-        return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository('App:User')->findAll()]);
+        $form = $this->createForm(FilterUserType::class,['csrf_protection' => false, 'method' => 'GET']);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $param = $request->get('filter_user')['filterUser'];
+            switch ($param) {
+                case 'all':
+                    $param = 'all';
+                    break;
+                case 0:
+                    $param = $this->repoUser->findBy(['roles' => 'ROLE_ADMIN']);
+                    break;
+                case 1:
+                    $param = $this->repoUser->findBy(['roles' => json_encode('ROLE_USER')]);
+                    break;
+            }
+        }
+        ($param =='all')?$toto = true: $toto = null;
+        return $this->render('user/list.html.twig', [
+            'users' => ($toto)?$this->repoUser->findAll():$param,
+            'form' =>  $form->createView()
+        ]);
     }
 
     /**
      * @Route("/users/create", name="user_create")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createAction(Request $request )
     {
@@ -41,6 +74,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user->setRoles([$request->get('user')['role']]);
             $password =$this->hasher->hashPassword($user, $user->getPassword());
             $user->setEmail($user->getEmail());
             $user->setName($user->getName());
@@ -51,7 +85,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('all-users', ['param' => 'all']);
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
@@ -59,24 +93,33 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     * @Security(
+     *      "user === userId || is_granted('ROLE_ADMIN')",
+     *      message = "Vous n'avez pas les droits pour modifier cette utilisateur"
+     * )
+     * @param User    $userId
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
-    public function editAction(User $user, Request $request)
+    public function editAction(User $userId, Request $request)
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $userId);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password =$this->hasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($password);
+            $userId->setRoles([$request->get('user')['role']]);
+            $password =$this->hasher->hashPassword($userId, $userId->getPassword());
+            $userId->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('all-users', ['param' => 'all']);
         }
 
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $userId]);
     }
 }

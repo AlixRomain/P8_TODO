@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -30,6 +31,23 @@ class UserType extends AbstractType
                     'class' =>'form-control',
                 ]
             ])
+             ->add('role', ChoiceType::class, [
+                 'required'=>true,
+                 'mapped' => false,
+                 'choices'  => [
+                     'Role Admin' => 'ROLE_ADMIN',
+                     'Role User' => 'ROLE_USER'
+                 ],
+                 'choice_attr' =>[
+                     'Role Admin' => ['class' => 'optio'],
+                     'Role User' => ['class' => 'optio'],
+                 ],
+                 'label' => "Rôle utilisateur",
+                 'attr' => [
+                     'placeholder' => 'Choisissez un rôle utilisateur',
+                     'class' =>'form-control d-inline ',
+                 ]
+             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mots de passe doivent correspondre.',
@@ -48,7 +66,9 @@ class UserType extends AbstractType
                         'class' =>'form-control',
                     ]
                 ],
+
             ])
+
         ;
     }
 

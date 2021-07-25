@@ -7,30 +7,25 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FilterType extends AbstractType
+class FilterUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('filter', ChoiceType::class, [
+            ->add('filterUser', ChoiceType::class, [
                 'choices'  => [
-                    'Ranger par Deadline' => 0,
-                    'Toutes'=> 'all',
-                    'Terminé' => 2,
-                    'Encours' => 3,
-                    'Qui me sont destinés' => 4
-
+                    'Role Admin' => 0,
+                    'Role User' => 1,
+                    'Tous les utilisateurs' => 'all'
                 ],
                 'choice_attr' =>[
-                    'Ranger par Deadline' => ['class' => 'optio'],
-                    'Toutes' => ['class' => 'optio'],
-                    'Terminé' => ['class' => 'optio'],
-                    'Encours' => ['class' => 'optio'],
-                    'Qui me sont destinés' => ['class' => 'optio'],
+                    'Role Admin' => ['class' => 'optio'],
+                    'Role User' => ['class' => 'optio'],
+                    'Tous les utilisateurs' => ['class' => 'optio'],
                 ],
-                'label' => "Filtres de tâches",
+                'label' => "Filtres d'utilisateur",
                 'attr' => [
-                    'placeholder' => 'Filtré les tâches',
+                    'placeholder' => 'Filtré les utilisateurs',
                     'class' =>'form-control d-inline ',
                 ]
             ]);

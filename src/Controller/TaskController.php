@@ -5,14 +5,28 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\FilterType;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TaskController extends AbstractController
 {
+    private $em;
+    private $repoUser;
+    private $repoTask;
+
+    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository, TaskRepository $taskRepository)
+    {
+        $this->em = $entityManager;
+        $this->repoUser = $userRepository;
+        $this->repoTask = $taskRepository;
+    }
     /**
-     * @Route("/tasks/{param}", name="task_list")
+     * @Route("/tasks-all/{param}", name="all_tasks")
      * @param $param string
      */
     public function listAction($param, Request $request)
@@ -28,7 +42,7 @@ class TaskController extends AbstractController
                 case 'all':
                     break;
                 case 0:
-                    $param = $this->getDoctrine()->getRepository('App:Task')->findBy([],['deadLine' => 'DESC']);
+                    $param = $this->getDoctrine()->getRepository('App:Task')->findBy([],['deadLine' => 'ASC']);
                     break;
                 case 1:
                     $param = $this->getDoctrine()->getRepository('App:Task')->findBy(['id' =>'id > 0']);
@@ -38,6 +52,9 @@ class TaskController extends AbstractController
                     break;
                 case 3:
                     $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => 0]);
+                    break;
+                case 4:
+                    $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['targetUser' => $this->getUser()]);
                     break;
             }
         }
@@ -55,20 +72,24 @@ class TaskController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        $users = $this->repoUser->findAll();
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, array('users'=> $users));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            var_dump($request->get('targetUser'));
+           var_dump($task->getcontent());
 
+            $task->setUser($this->getUser());
             $em->persist($task);
             $em->flush();
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('all_tasks', ['param' => 'all']);
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -88,7 +109,7 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('all_tasks', ['param' => 'all']);
         }
 
         return $this->render('task/edit.html.twig', [
@@ -107,11 +128,15 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('all_tasks', ['param' => 'all']);
     }
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Security(
+     *      "user === task.user || is_granted('ROLE_SUPER_ADMIN')",
+     *      message = "Vous n'avez pas les droits pour supprimer cette tâche"
+     * )
      */
     public function deleteTaskAction(Task $task)
     {
@@ -121,6 +146,6 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute('all_tasks', ['param' => 'all']);
     }
 }

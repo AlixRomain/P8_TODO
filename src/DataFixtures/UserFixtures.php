@@ -61,7 +61,7 @@ class UserFixtures extends Fixture
         $user = new User;
         $user->setName('User');
 
-        $password = $this->encoder->hashPassword($user,'OpenClass21!!');
+        $password = $this->encoder->hashPassword($user,'OpenClass21!');
         $user->setPassword($password);
 
         $user->setEmail('user@gmail.com');
