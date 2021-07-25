@@ -31,11 +31,8 @@ class TaskController extends AbstractController
      */
     public function listAction($param, Request $request)
     {
-
         $form = $this->createForm(FilterType::class);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $param = $request->get('filter')['filter'];
             switch ($param) {
@@ -59,7 +56,6 @@ class TaskController extends AbstractController
             }
         }
         ($param =='all')?$toto = true: $toto = null;
-
             return $this->render('task/list.html.twig',
                                  [
                                      'tasks' => ($toto)?$this->getDoctrine()->getRepository('App:Task')->findAll():$param,

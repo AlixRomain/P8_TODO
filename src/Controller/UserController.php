@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\FilterUserType;
+use App\Form\UserEditType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -104,12 +105,12 @@ class UserController extends AbstractController
      */
     public function editAction(User $userId, Request $request)
     {
-        $form = $this->createForm(UserType::class, $userId);
+        $form = $this->createForm(UserEditType::class, $userId);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userId->setRoles([$request->get('user')['role']]);
+            $userId->setRoles([$request->get('user_edit')['role']]);
             $password =$this->hasher->hashPassword($userId, $userId->getPassword());
             $userId->setPassword($password);
 
