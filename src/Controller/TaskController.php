@@ -8,6 +8,7 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -132,6 +133,10 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Security(
+     *      "user === task.user || is_granted('ROLE_SUPER_ADMIN')",
+     *      message = "Vous n'avez pas les droits pour supprimer cette tâche"
+     * )
      */
     public function deleteTaskAction(Task $task)
     {
