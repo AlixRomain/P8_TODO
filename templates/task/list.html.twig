@@ -28,7 +28,7 @@
                         <div class="card-header"{{  (task.isDone) ? '' : 'style="background-color: limegreen!important"' }}>
                             <div class="d-flex justify-content-between">
                                 {{ task.id }}
-                                <a href="{{ path('task_edit', {'id' : task.id }) }}" title="Editer cette tâche"> {{ task.title }}</a>
+                                <a href="{{ path('task_show', {'id' : task.id }) }}" title="Editer cette tâche">{{ task.title }}</a>
                                 <h4 class="pull-right">
                                     {% if task.isDone %}<i class="fas fa-check"></i>{% else %}<i style="color: white;" class="fas fa-hourglass-start"></i>{% endif %}
                                 </h4>
@@ -38,7 +38,7 @@
                         <div class="card-body">
                             <h6>Tâche assigner à {{ not task.targetUser ? ' tous':  task.targetUser.name}} le {{ task.createdAt |date('d/m/Y') }} par {{ task.user.name}}</h6>
                             <h4 class="card-title"> <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                                    {% if task.isDone %}
+                                    {% if not task.isDone %}
                                         <button class="btn btn-success btn-sm pull-right"> Marquer comme faite</button>
                                     {% else %}
                                         <button class="btn btn-warning btn-sm pull-right">Marquer non terminée</button>
@@ -47,9 +47,11 @@
                             <p class="card-text">{{ task.content }}.</p>
                             <hr>
                             <div class="d-flex justify-content-around">
+                                {% if app.user and app.user.roles[0] != 'ROLE_USER' %}
                                 <form action="{{ path('task_delete', {'id' : task.id }) }}">
                                     <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
                                 </form>
+                                {% endif %}
                                 {% if not task.isDone %}
                                     <form action="{{ path('task_edit', {'id' : task.id }) }}">
                                         <button class="btn btn-info btn-sm pull-right">Modifier</button>

@@ -75,14 +75,25 @@ class UserFixtures extends Fixture
         $users = $this->repoUser->findAll();
         foreach ($users as $user ){
 
-            for ($i = 0; $i < 2; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $date 		= new \DateTime();
                 ($i % 2 == 0)?$toto = true : $toto = false;
-
+                $nameTache = '';
+                if($user->getRoles()[0] =='ROLE_ADMIN'){
+                    if($user->getEmail() == 'admin@gmail.com'){
+                        $nameTache = 'Tâche_Admin_';
+                    }else{
+                        $nameTache = 'Tâche_Anonym_';
+                    }
+                }elseif ($user->getRoles()[0] =='ROLE_USER'){
+                    $nameTache = 'Tâche_User_';
+                }elseif ($user->getRoles()[0] =='ROLE_SUPER_ADMIN'){
+                    $nameTache = 'Tâche_Super_Admin_';
+                }
                 $task = new Task();
                 $task->setCreatedAt(new \DateTime());
                 $task->setDeadLine($date->setTimestamp(strtotime("+15 days")));
-                $task->setTitle('Tâche_' . ($i + 1));
+                $task->setTitle($nameTache.($i + 1));
                 $task->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
                 $task->setIsDone($toto);
                 $task->setUser($user);

@@ -2,7 +2,7 @@
 
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
@@ -14,8 +14,8 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <env name="DATABASE_URL" value="mysql://root:@127.0.0.1/todolist-test"/>
     </php>
-
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>tests</directory>
@@ -24,7 +24,12 @@
 
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">src/Controller</directory>
+            <directory suffix=".php">src/Entity</directory>
+            <directory suffix=".php">src/Form</directory>
+            <directory suffix=".php">src/DataFixtures</directory>
+            <directory suffix=".php">src/Security/Voter</directory>
+            <directory suffix=".php">src/Services</directory>
         </include>
     </coverage>
 
