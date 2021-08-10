@@ -8,6 +8,8 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Client\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,6 +66,20 @@ class TaskController extends AbstractController
     }
 
     /**
+     * Show one task
+     *
+     * @Route("/tasks/{id}/show", name="task_show")
+     *
+     * @param Task $task
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction(Task $task)
+    {
+        return $this->render('task/show.html.twig', ['task' => $task]);
+    }
+
+    /**
      * @Route("/tasks/create", name="task_create")
      */
     public function createAction(Request $request)
@@ -93,7 +109,9 @@ class TaskController extends AbstractController
      */
     public function editAction(Task $task, Request $request)
     {
-        $form = $this->createForm(TaskType::class, $task);
+        $users = $this->repoUser->findAll();
+        $form = $this->createForm(TaskType::class, $task, array('users'=> $users));
+
 
         $form->handleRequest($request);
 
@@ -121,24 +139,31 @@ class TaskController extends AbstractController
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('all_tasks', ['param' => 'all']);
+        return $this->redirectToRoute('all_tasks', ['param' => 'all'],301);
     }
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @IsGranted("ROLE_USER")
      * @Security(
-     *      "user === task.user || is_granted('ROLE_SUPER_ADMIN')",
+     *      "user === task.getUser() || is_granted('ROLE_ADMIN')",
      *      message = "Vous n'avez pas les droits pour supprimer cette tâche"
      * )
      */
     public function deleteTaskAction(Task $task)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        if($task){
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($task);
+            $em->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
-
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+        }
         return $this->redirectToRoute('all_tasks', ['param' => 'all']);
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
     }
 }

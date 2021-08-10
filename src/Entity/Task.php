@@ -6,11 +6,14 @@ use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
+ * @UniqueEntity("title")
  */
+
 class Task
 {
     /**
@@ -57,6 +60,12 @@ class Task
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank(message="Vous devez saisir du contenu.")
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 2000,
+     *      minMessage = "Le champ contenu doit contenir au moins {{ limit }} caractères de long",
+     *      maxMessage = "Le champ contenu ne peut pas contenir plus que {{ limit }} caractères"
+     * )
      */
     private $content;
 
