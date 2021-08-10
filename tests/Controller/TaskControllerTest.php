@@ -2,12 +2,10 @@
 
 namespace App\Tests;
 
-use App\Repository\UserRepository;
-use App\Tests\Utils;
+
 use DateTime;
 use App\Entity\Task;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HTTPFoundation\Response;
 
 class TaskControllerTest extends Utils
