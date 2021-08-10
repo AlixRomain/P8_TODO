@@ -57,6 +57,7 @@ class UserController extends AbstractController
             }
         }
         ($param =='all')?$toto = true: $toto = null;
+        $user= $this->repoUser->findAll();
         return $this->render('user/list.html.twig', [
             'users' => ($toto)?$this->repoUser->findAll():$param,
             'form' =>  $form->createView()

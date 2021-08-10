@@ -2,6 +2,7 @@
 
 namespace App\Security\Voter;
 
+
 use App\Services\RoleHelper;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -56,7 +57,6 @@ class UserVoter extends Voter
                 }
                 break;
         }
-
         return false;
     }
 }
