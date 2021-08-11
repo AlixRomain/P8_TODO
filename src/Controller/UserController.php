@@ -74,14 +74,11 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
-
+        print_r($request->get('user')->getName());exit;
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setRoles([$request->get('user')['role']]);
             $password =$this->hasher->hashPassword($user, $user->getPassword());
-            $user->setEmail($user->getEmail());
-            $user->setName($user->getName());
             $user->setPassword($password);
-
             $this->em->persist($user);
             $this->em->flush();
 
@@ -109,11 +106,18 @@ class UserController extends AbstractController
         $form = $this->createForm(UserEditType::class, $userId);
 
         $form->handleRequest($request);
-
+        print_r($request->get('user_edit')->getName());exit;
+print_r(count($form->getErrors())); exit;
+        if ($form->getErrors()){
+          foreach ($form->getErrors() as $error) {
+              print_r($error);
+              exit;
+          }
+        }
         if ($form->isSubmitted() && $form->isValid()) {
-            $userId->setRoles([$request->get('user_edit')['role']]);
-            $password =$this->hasher->hashPassword($userId, $userId->getPassword());
-            $userId->setPassword($password);
+//            $userId->setRoles([$request->get('user_edit')['role']]);
+//            $password =$this->hasher->hashPassword($userId, $userId->getPassword());
+//            $userId->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
 
@@ -123,5 +127,21 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $userId]);
+    }
+    /**
+     * User deletion
+     *
+     * @Route("/users/{id}/delete", name="user_delete")
+     * @IsGranted("DELETE", subject="userToDelete")
+     * @param User $userToDelete
+     *
+     * @return Response
+     */
+    public function deleteAction(User $userToDelete)
+    {
+        $this->em->remove($userToDelete);
+        $this->em->flush();
+        $this->addFlash('success', 'L\'utilisateur a bien été supprimé');
+        return $this->redirectToRoute('all-users', ['param' => 'all']);
     }
 }

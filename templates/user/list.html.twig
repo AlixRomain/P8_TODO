@@ -41,7 +41,7 @@
                         {% if is_granted('EDIT', user) %}
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
-                                <td>{{ user.username }}</td>
+                                <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
                                  <td>{{ user.roles[0] }}</td>
                                 <td>

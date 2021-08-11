@@ -3,18 +3,15 @@
 namespace App\Tests;
 
 use App\Entity\User;
-use App\Tests\Utils;
-use Symfony\Component\HTTPFoundation\Response;
-use App\Entity\Task;
+
 
 class UserControllerTest extends Utils
 {
-   /* public function setUp()
+    public function setUp():void
     {
         parent::setUp();
-    }*/
-
-    public function testListAction()
+    }
+  /* public function testListAction()
     {
         $client = $this::createClientNav('admin@gmail.com');
 
@@ -31,113 +28,93 @@ class UserControllerTest extends Utils
         // Assert not contains other admin
         static::assertNotContains('UserAnon', $text);
         static::assertNotContains('SuperAdmin', $text);
-    }
+    }*/
 
- /*   public function testCreateUserAction()
+   public function testCreateUserAction()
     {
-        $client = $this::createClientNav('admin@gmail.com');
+         $client = $this::createClientNav('admin@gmail.com');
+         // Go to user creation page
+         $crawler = $client[0]->request('GET', '/users/create');
+         static::assertResponseIsSuccessful();
+         $buttonCrawlerNode = $crawler->selectButton('Ajouter');
+         // Add user with form
+         $form = $buttonCrawlerNode->form();
 
-        // Go to user creation page
-        $crawler = $client[0]->request('GET', '/users/create');
-        static::assertResponseIsSuccessful();
+         $form['user[name]'] = 'UserTest';
+         $form['user[password][first]'] = 'OpenClass21!';
+         $form['user[password][second]'] ='OpenClass21!';
+         $form['user[email]'] = 'user-test@gmail.com';
+         $form['user[role]']->select('ROLE_USER');
 
-        // Add user with form
-        $form = $crawler->selectButton('Ajouter')->form();
+         $client[0]->submit($form);
 
-        $form['user[username]'] = 'UserTest';
-        $form['user[password][first]'] = 'UserTest34!';
-        $form['user[password][second]'] = 'UserTest34!';
-        $form['user[email]'] = 'user-test@gmail.com';
-        $values = $form['user[roles]']->availableOptionValues();
-        $form['user[roles]']->setValue($values[0]);
+         // Assert that the new user is in the list
+         $tds = $crawler->filter('td')->extract(['_text']);
+         static::assertContains('UserTest', $tds);
 
-        $crawler = $client[0]->submit($form);
-        static::assertResponseIsSuccessful();
-
-        // Assert flash message is displayed
-        static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été ajouté.');
-
-        // Assert that the new user is in the list
-        $tds = $crawler->filter('td')->extract(['_text']);
-        static::assertContains('UserTest', $tds);
-
-        // Assert user in DB
-        $user = $client[1]->getRepository(User::class)->findOneBy(['username' => 'UserTest']);
-        static::assertNotNull($user);
-        static::assertSame('UserTest', $user->getUsername());
-        static::assertSame('user-test@gmail.com', $user->getEmail());
-        static::assertSame(array('ROLE_USER'), $user->getRoles());
+         // Assert user in DB
+         $user = $client[1]->getRepository(User::class)->findOneBy(['name' => 'UserTest']);
+         static::assertNotNull($user);
+         static::assertSame('UserTest', $user->getName());
+         static::assertSame('user-test@gmail.com', $user->getEmail());
+         static::assertSame(array('ROLE_USER'), $user->getRoles());
     }
 
-    public function testCreateActionRoleUser()
-    {
-        $client = $this::createClientNav('user@gmail.com');
+     /*  public function testCreateActionRoleUser()
+       {
+           $client = $this::createClientNav('user@gmail.com');
 
-        // Go to user creation page, assert that is forbidden
-        $crawler = $client[0]->request('GET', '/users/create');
-        static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
-    }
+           // Go to user creation page, assert that is forbidden
+           $crawler = $client[0]->request('GET', '/users/create');
+           static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+       }
+*/
+      public function testEditUserAction()
+      {
+          $client = $this::createClientNav('admin@gmail.com');
+          // Go to the edition page of the task id = 1
+          $crawler = $client[0]->request('GET', '/users/4/edit');
+          static::assertResponseIsSuccessful();
 
-    public function testEditUserAction()
-    {
-        $client = $this::createClientNav('admin@gmail.com');
+          // Edit the task with form
+          $form = $crawler->selectButton('Modifier')->form();
+          $form['user_edit[name]'] = 'UserUpdate';
+          /* $form['user_edit[email]'] = 'user-update@gmail.com';*/
+          $form['user_edit[role]'] = 'ROLE_USER';
 
-        // Go to the edit user page
-        $crawler = $client[0]->request('GET', '/users/4/edit');
-        static::assertResponseIsSuccessful();
+          $crawler = $client[0]->submit($form);
+        /*  $client = $this::createClientNav('admin@gmail.com');
 
-        // Edit the user with form
-        $form = $crawler->selectButton('Modifier')->form();
+          // Go to the edit user page
+          $crawler = $client[0]->request('GET', '/users/4/edit');
+          static::assertResponseIsSuccessful();
 
-        $form['user[username]'] = 'UserUpdate';
-        $form['user[password][first]'] = 'User340!';
-        $form['user[password][second]'] = 'User340!';
-        $form['user[email]'] = 'user-update@gmail.com';
-        $values = $form['user[roles]']->availableOptionValues();
-        $form['user[roles]']->setValue($values[0]);
+          // Edit the user with form
+          $form = $crawler->selectButton('Modifier')->form();
 
-        $crawler = $client[0]->submit($form);
-        static::assertResponseIsSuccessful();
+          $form['user_edit[name]'] = 'UserUpdate';
+          $form['user_edit[email]'] = 'user-update@gmail.com';
+          $form['user_edit[role]'] = 'ROLE_USER';
 
-        // Assert flash message is displayed
-        static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été modifié');
+          $crawler = $client[0]->submit($form);*/
+          static::assertResponseIsSuccessful();
 
-        // Assert that the edited user is in the list
-        $tds = $crawler->filter('td')->extract(['_text']);
-        static::assertContains('UserUpdate', $tds);
+        /*  // Assert flash message is displayed
+          static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été modifié');*/
 
-        // Assert user in DB
-        $user = $client[1]->getRepository(User::class)->findOneBy(['username' => 'UserUpdate']);
-        static::assertNotNull($user);
-        static::assertSame('UserUpdate', $user->getUsername());
-        static::assertSame('user-update@gmail.com', $user->getEmail());
-        static::assertSame(array('ROLE_USER'), $user->getRoles());
-    }
+          // Assert that the edited user is in the list
+         /* $text = $crawler->filter('td')->extract(['_text']);
+          static::assertContains('UserUpdate', $text);
 
-    /**
-     * The purpose is to assert that role field is not available when user === subject
-     */
-  /*  public function testEditRoleSuperAdminBeingSuperAdmin()
-    {
-        $client = $this::createClientNav('admin@gmail.com');
+          // Assert user in DB
+          $user = $client[1]->getRepository(User::class)->findOneBy(['username' => 'UserUpdate']);
+          static::assertNotNull($user);
+          static::assertSame('UserUpdate', $user->getName());
+          static::assertSame('user-update@gmail.com', $user->getEmail());
+          static::assertSame(array('ROLE_USER'), $user->getRoles());*/
+      }
 
-        // Go to Admin edition page
-        $crawler = $client[0]->request('GET', '/users/2/edit');
-        static::assertResponseIsSuccessful();
-
-        // Assert role is available editing user with inferior role
-        static::assertSelectorTextSame('#user_roles > div:nth-child(1) > label[for=user_roles_0]', 'Utilisateur');
-        static::assertSelectorTextSame('#user_roles > div:nth-child(2) > label[for=user_roles_1]', 'Administrateur');
-
-        // Go to SuperAdmin edition page
-        $crawler = $client[0]->request('GET', '/users/1/edit');
-        static::assertResponseIsSuccessful();
-
-        // Assert role is not available editing himself
-        static::assertSelectorNotExists('#user_roles > div:nth-child(1) > label[for=user_roles_0]');
-        static::assertSelectorNotExists('#user_roles > div:nth-child(2) > label[for=user_roles_1]');
-    }
-
+/*
     public function testEditActionRoleUser()
     {
         $client = $this::createClientNav('user@gmail.com');
@@ -154,12 +131,12 @@ class UserControllerTest extends Utils
     {
         $client = $this::getTools();
         // Get the user from DB
-        $user = $client->getRepository(User::class)->findOneBy(['username' => 'Admin']);
+        $user = $client->getRepository(User::class)->findOneBy(['name' => 'Admin']);
         static::assertNotNull($user);
 
-        // Get user's task, asserting there is 4
+        // Get user's task, asserting there is 5
         $tasks = $user->getTasks();
-        static::assertSame(4, count($tasks));
+        static::assertSame(5, count($tasks));
 
         // Create new task, add user to task, assert user is the good one
         $task = new Task;
@@ -171,29 +148,35 @@ class UserControllerTest extends Utils
         static::assertNull($task->getUser());
     }
 
-    public function testDeleteActionUser()
-    {
-        $client = $this::createClientNav('superadmin@gmail.com');
+        public function testDeleteActionUser()
+        {
+            $client = $this::createClientNav('superadmin@gmail.com');
 
-        // Go to list of user
-        $crawler = $client[0]->request('GET', '/users');
-        static::assertResponseIsSuccessful();
+            // Go to list of user
+            $crawler = $client[0]->request('GET', '/users-all/all');
+            static::assertResponseIsSuccessful();
 
-        // Delete an user
-        $crawler = $client[0]->request('GET', '/users/4/delete');
-        static::assertResponseIsSuccessful();
+            // Assert that the user with Name User exist
+            $text = $crawler->filter('td')->extract(['_text']);
+            static::assertContains('User', $text);
 
-        // Assert flash message is displayed
-        static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été supprimé');
-    }
+            // Delete an user
+            $crawler = $client[0]->request('GET', '/users/4/delete');
+            static::assertSame(302, $client[0]->getResponse()->getStatusCode());
 
-    public function testAccessUserPageWhenNotConnected()
-    {
-        $client = $this::getClientCx();
-        // Go to edit form of an user being not authenticated
-        $client->request('GET', '/users/3/edit');
-        static::assertResponseRedirects('/login');
-    }*/
+            // Assert that the user with Name USer not exist
+            $text = $crawler->filter('td')->extract(['_text']);
+            static::assertNotContains('User', $text);
+
+        }
+
+           public function testAccessUserPageWhenNotConnected()
+            {
+                $client = $this::getClientCx();
+                // Go to edit form of an user being not authenticated
+                $client->request('GET', '/users/3/edit');
+                static::assertResponseRedirects('/login');
+            }*/
 
  /*   protected function tearDown()
     {

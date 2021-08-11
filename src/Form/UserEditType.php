@@ -35,8 +35,8 @@ class UserEditType extends AbstractType
                 'required'=>true,
                 'mapped' => false,
                 'choices'  => [
-                    'Role Admin' => 'ROLE_ADMIN',
-                    'Role User' => 'ROLE_USER'
+                    'Administrateur' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER'
                 ],
                 'choice_attr' =>[
                     'Role Admin' => ['class' => 'optio'],
