@@ -14,11 +14,9 @@
     <label for="inputPassword">Password</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
-    <input type="hidden" name="_csrf_token"
+{#    <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
-    >
-    <button class="btn btn-lg btn-primary mt-100" type="submit">
-        Se connecter
-    </button>
+    >#}
+    <button class="btn btn-lg btn-primary mt-100" type="submit">Se connecter</button>
 </form>
 {% endblock %}

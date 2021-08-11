@@ -74,22 +74,34 @@ class TaskControllerTest extends Utils
 
              public function testCreateTask()
              {
-                 $client = $this::createClientNav('user@gmail.com');
+                 /*$client = $this::createClientNav('user@gmail.com');*/
+                 $client = static::createClient();
+                 $this->loginAdmin($client,'user@gmail.com');
 
                  // Create task with form
-                 $crawler = $client[0]->request('GET', '/tasks/create');
-
-                 $form = $crawler->selectButton('Ajouter')->form();
+                 $crawler = $client->request('GET', '/tasks/create');
+                 $task = $crawler->filter("button")->link();
+                 $client->click($task);
+                 $client->submitForm('Ajouter', [
+                     'task[title]' => 'Tâche_Test',
+                 'task[content]' => 'Tâche de Test',
+                 'task[deadline][month]' => '09',
+                 'task[deadline][day]' => '19',
+                 'task[deadline][year]' => '2021'
+                 ]);
 //                 print_r($form->getName());exit;
+               /*
+
+                $form = $crawler->selectButton('Ajouter')->form();
                  $user = $client[1]->getRepository(User::class)->findOneBy(['name' => 'Admin']);
                  $form['task[title]'] = 'Tâche_Test';
                  $form['task[content]'] = 'Tâche de Test';
                  $form['task[deadline][month]'] = '09';
                  $form['task[deadline][day]'] = '19';
                  $form['task[deadline][year]'] = '2021';
-                 $form['task[targetUser]'] = $user->getId();
+                 $form['task[targetUser]'] = 4;
+                 $crawler = $client->submit($form);*/
 
-                 $crawler = $client[0]->submit($form);
                  static::assertResponseIsSuccessful();
                  // Il faut suivre la redirection
                  /*$crawler = $client[0]->followRedirect();*/

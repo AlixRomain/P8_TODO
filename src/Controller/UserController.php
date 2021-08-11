@@ -74,7 +74,6 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
-        print_r($request->get('user')->getName());exit;
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setRoles([$request->get('user')['role']]);
             $password =$this->hasher->hashPassword($user, $user->getPassword());
@@ -106,18 +105,10 @@ class UserController extends AbstractController
         $form = $this->createForm(UserEditType::class, $userId);
 
         $form->handleRequest($request);
-        print_r($request->get('user_edit')->getName());exit;
-print_r(count($form->getErrors())); exit;
-        if ($form->getErrors()){
-          foreach ($form->getErrors() as $error) {
-              print_r($error);
-              exit;
-          }
-        }
         if ($form->isSubmitted() && $form->isValid()) {
-//            $userId->setRoles([$request->get('user_edit')['role']]);
-//            $password =$this->hasher->hashPassword($userId, $userId->getPassword());
-//            $userId->setPassword($password);
+           $userId->setRoles([$request->get('user_edit')['role']]);
+           $password =$this->hasher->hashPassword($userId, $userId->getPassword());
+           $userId->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
 

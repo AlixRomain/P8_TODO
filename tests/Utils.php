@@ -19,6 +19,8 @@ class Utils extends WebTestCase
 
     protected $em;
 
+
+
     /**
      * Create the database | Create tables | Load Fixture
      * Create client | Get container | Get entityManager
@@ -78,6 +80,14 @@ class Utils extends WebTestCase
         $client->loginUser($testUser);
 
         return [$client,$repo];
+    }
+    protected function loginAdmin($client,$mail){
+        $client->request("GET", "/login");
+        $client->submitForm("Se connecter", [
+            'email' => $mail,
+            'password' => 'OpenClass21!'
+        ]);
+        return $client;
     }
 
     /**
