@@ -71,7 +71,10 @@ class UserController extends AbstractController
     public function createAction(Request $request )
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user,[
+            'action' => $this->generateUrl('user_create'),
+            'method' => 'GET',
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -102,7 +105,10 @@ class UserController extends AbstractController
      */
     public function editAction(User $userId, Request $request)
     {
-        $form = $this->createForm(UserEditType::class, $userId);
+        $form = $this->createForm(UserEditType::class, $userId,[
+            'action' => $this->generateUrl('user_edit', ['id' => $userId->getId()]),
+            'method' => 'GET',
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
