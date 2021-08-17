@@ -41,18 +41,20 @@ class UserController extends AbstractController
         $form = $this->createForm(FilterUserType::class,['csrf_protection' => false, 'method' => 'GET']);
 
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if(isset($request->get('filter_user')['filterUser'])){
             $param = $request->get('filter_user')['filterUser'];
+        }
+
+        if ( $param) {
             switch ($param) {
                 case 'all':
                     $param = 'all';
                     break;
                 case 0:
-                    $param = $this->repoUser->findBy(['roles' => 'ROLE_ADMIN']);
+                    $param = $this->repoUser->findByRole('ROLE_ADMIN');
                     break;
                 case 1:
-                    $param = $this->repoUser->findBy(['roles' => json_encode('ROLE_USER')]);
+                    $param = $this->repoUser->findByRole('ROLE_USER');
                     break;
             }
         }

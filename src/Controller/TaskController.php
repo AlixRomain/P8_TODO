@@ -168,9 +168,4 @@ class TaskController extends AbstractController
         }
         return $this->redirectToRoute('all_tasks', ['param' => 'all']);
     }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
 }

@@ -12,7 +12,7 @@
             <p>User crée par {{ app.user.name }} : </p>
         </div>
         <div class="col-md-6 justify-content-lg-between">
-            {{ form_start(form, {'action' :path('all-users', {'param' : 'all'})}) }}
+            {{ form_start(form, {'action' :path('all-users', {'param' : 'all'}), 'method': 'GET'}) }}
             {{ form_row(form.filterUser) }}
             <a href="{{ path('user_create') }}" class="btn d-inline-block btn-info pull-right">Créer un utilisateur</a>
             <button type="submit" class="m-lg-2 btn btn-success pull-right d-inline-block">Go</button>
@@ -43,7 +43,7 @@
                                 <th scope="row">{{ loop.index }}</th>
                                 <td>{{ user.name }}</td>
                                 <td>{{ user.email }}</td>
-                                 <td>{{ user.roles[0] }}</td>
+                                 <td class="role">{{ user.roles[0] }}</td>
                                 <td>
                                     <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
                                     {% if is_granted('DELETE', user) %}
