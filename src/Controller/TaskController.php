@@ -115,7 +115,7 @@ class TaskController extends AbstractController
     {
         $users = $this->repoUser->findAll();
         $form = $this->createForm(TaskType::class, $task,[
-            'action' => $this->generateUrl('task_edit'),
+            'action' => $this->generateUrl('task_edit', ['id' => $task->getId()]),
             'method' => 'GET',
             'users'=> $users
         ]);
