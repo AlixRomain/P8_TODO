@@ -14,7 +14,7 @@
         <div class="col-md-6 justify-content-lg-between">
             {{ form_start(form, {'action' :path('all-users', {'param' : 'all'})}) }}
             {{ form_row(form.filterUser) }}
-            <a href="{{ path('user_create') }}" class="btn d-inline-block btn-info pull-right"><i class="fas fa-tasks mr-3"></i>  +  Créer un nouvel utilisateur</a>
+            <a href="{{ path('user_create') }}" class="btn d-inline-block btn-info pull-right">Créer un utilisateur</a>
             <button type="submit" class="m-lg-2 btn btn-success pull-right d-inline-block">Go</button>
             {{ form_end(form) }}
         </div>
