@@ -20,9 +20,7 @@
                     <li class="nav-item mr-3 p-2">
                         <a href="{{ path('all_tasks', {'param' : 'all'})  }}" class="btn btn-primary btn-back-pink">Tâches</a>
                     </li>
-                {% endif %}
                 <li class="nav-item p-2">
-                    {% if app.user %}
                         <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger btn-back-orange">Se déconnecter</a>
                     {% endif %}
                 </li>
