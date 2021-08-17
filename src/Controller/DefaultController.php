@@ -15,4 +15,5 @@ class DefaultController extends AbstractController
     {
         return $this->redirectToRoute('app_login');
     }
+
 }

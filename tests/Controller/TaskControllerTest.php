@@ -10,11 +10,6 @@ use Symfony\Component\HTTPFoundation\Response;
 
 class TaskControllerTest extends Utils
 {
-    public function setUp():void
-    {
-        parent::setUp();
-    }
-    //J'ai commenté le WebTestCase.php
     public function testListActionWithRoute()
     {
         $client = $this::createClientNav('user@gmail.com');
@@ -31,6 +26,30 @@ class TaskControllerTest extends Utils
         $links = $crawler->filter('a')->extract(['_text']);
         static::assertContains('Tâche_Super_Admin_1', $links);
         static::assertContains('Tâche_Super_Admin_2', $links);
+    }
+
+
+    public function testListActionByTargetUser()
+    {
+        $client = $this::createClientNav('admin@gmail.com');
+
+        // test e.g. the profile page
+        $crawler = $client[0]->request('GET', '/tasks-all/all');
+        static::assertEquals(Response::HTTP_OK, $client[0]->getResponse()->getStatusCode());
+
+        // Go to task list
+        static::assertResponseIsSuccessful();
+        static::assertRouteSame('all_tasks');
+
+        $form = $crawler->selectButton('Go')->form();
+        $form['filter[filter]'] = 4;
+        $crawler = $client[0]->submit($form);
+
+        // Assert there are tasks
+        $links = $crawler->filter('h6')->extract(['_text']);
+        static::assertContains('Tâche assigner à Admin', $links);
+        static::assertNotContains('Tâche assigner à User', $links);
+        static::assertNotContains('Tâche assigner à tout le monde', $links);
     }
 
     public function testListWithButtonBackTo()
@@ -182,8 +201,8 @@ class TaskControllerTest extends Utils
                         {
                             $client = $this::createClientNav('user@gmail.com');
 
-                            // Assert task id = 1 is not done in DB
-                            $task = $client[1]->getRepository(Task::class)->findOneBy(['id' => 2]);
+                            // Assert task id = 4 is not done in DB
+                            $task = $client[1]->getRepository(Task::class)->findOneBy(['id' => 4]);
                             static::assertNotNull($task);
                             static::assertFalse($task->getIsDone());
 
@@ -220,9 +239,9 @@ class TaskControllerTest extends Utils
                             $links = $crawler->filter('a')->extract(['_text']);
                             static::assertNotContains($task->getTitle(), $links);
 
-                            // Assert task id = 1 is now done in DB
+                            // Assert task id = 4 is now done in DB
                             $client[1]->close();
-                            $doneTask = $client[1]->getRepository(Task::class)->findOneBy(['id' => 1]);
+                            $doneTask = $client[1]->getRepository(Task::class)->findOneBy(['id' => 4]);
                             static::assertTrue($doneTask->getIsDone());
                         }
 
@@ -357,10 +376,4 @@ class TaskControllerTest extends Utils
                 $links = $crawler->filter('a')->extract(['_text']);
                 static::assertNotContains($task->getTitle(), $links);
             }
-
-
-        protected function tearDown():void
-        {
-            parent::tearDown();
-        }
 }

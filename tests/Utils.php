@@ -25,14 +25,17 @@ class Utils extends WebTestCase
      * Create the database | Create tables | Load Fixture
      * Create client | Get container | Get entityManager
      */
-    protected function setUp():void
+    protected function setUp($toto = true):void
     {
+        if($toto){
+            self::runCommand('doctrine:database:drop --force');
+            self::runCommand('doctrine:database:create');
+            self::runCommand('doctrine:schema:update --force');
+            self::runCommand('doctrine:fixtures:load -n');
 
-        /*self::runCommand('doctrine:database:drop --force');
-        self::runCommand('doctrine:database:create');
-        self::runCommand('doctrine:schema:update --force');
-        self::runCommand('doctrine:fixtures:load -n');
-        exit();*/
+            static::$booted = false;
+        }
+
     }
 
     /**
@@ -113,10 +116,13 @@ class Utils extends WebTestCase
     /**
      * Drop database
      */
-   /*protected function tearDown():void
+   protected function tearDown():void
     {
-        self::runCommand('doctrine:database:drop --force');
+        static::ensureKernelShutdown();
+        static::$kernel = null;
+        static::$booted = false;
+       /* self::runCommand('doctrine:database:drop --force');
         $this->em->close();
-        $this->em = null;
-    }*/
+        $this->em = null;*/
+    }
 }

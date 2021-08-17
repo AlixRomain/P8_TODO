@@ -36,7 +36,8 @@
                                 <p class="col-md-12 d-block" >Deadline : {{ task.deadline|date('d/m/Y')}}</p>
                         </div>
                         <div class="card-body">
-                            <h6>Tâche assigner à {{ not task.targetUser ? ' tous':  task.targetUser.name}} le {{ task.createdAt |date('d/m/Y') }} par {{ task.user.name}}</h6>
+                            <h6>Tâche assigner à {{ not task.targetUser ? ' tout le monde':  task.targetUser.name}}</h6>
+                            <h6>le {{ task.createdAt |date('d/m/Y') }} par {{ task.user.name}}</h6>
                             <h4 class="card-title"> <form action="{{ path('task_toggle', {'id' : task.id }) }}">
                                     {% if not task.isDone %}
                                         <button class="btn btn-success btn-sm pull-right"> Marquer comme faite</button>

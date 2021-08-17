@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class UserControllerTest extends Utils
 {
-    public function setUp():void
+    public function setUp($toto = false):void
     {
-        parent::setUp();
+        parent::setUp(false);
     }
    public function testListAction()
     {
@@ -32,6 +32,24 @@ class UserControllerTest extends Utils
         // Assert not contains other admin
         static::assertNotContains('UserAnon', $text);
         static::assertNotContains('SuperAdmin', $text);
+    }
+    public function testListActionByTargetUser()
+    {
+        $client = $this::createClientNav('admin@gmail.com');
+        // Go to task list
+        $crawler = $client[0]->request('GET', '/users-all/all');
+        static::assertResponseIsSuccessful();
+        static::assertRouteSame('all-users');
+
+        $form = $crawler->selectButton('Go')->form();
+        $form['filter_user[filterUser]'] = 1;
+        $crawler = $client[0]->submit($form);
+        static::assertRouteSame('all-users');
+
+        // Assert there are tasks
+        $links = $crawler->filter('td.role')->extract(['_text']);
+        static::assertNotContains('ROLE_ADMIN', $links);
+        static::assertContains('ROLE_USER', $links);
     }
 
    public function testCreateUserAction()
@@ -79,6 +97,7 @@ class UserControllerTest extends Utils
            $crawler = $client[0]->request('GET', '/users/create');
            static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
        }
+
 
       public function testEditUserAction()
       {
@@ -176,9 +195,4 @@ class UserControllerTest extends Utils
                 $client->request('GET', '/users/3/edit');
                 static::assertResponseRedirects('/login');
             }
-
- /*   protected function tearDown()
-    {
-        parent::tearDown();
-    }*/
 }
