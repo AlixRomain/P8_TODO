@@ -35,8 +35,8 @@ class UserType extends AbstractType
                  'required'=>true,
                  'mapped' => false,
                  'choices'  => [
-                     'Role Admin' => 'ROLE_ADMIN',
-                     'Role User' => 'ROLE_USER'
+                     'Administrateur' => 'ROLE_ADMIN',
+                     'Utilisateur' => 'ROLE_USER'
                  ],
                  'choice_attr' =>[
                      'Role Admin' => ['class' => 'optio'],
@@ -76,6 +76,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+           'csrf_protection' => false,
         ]);
     }
 }

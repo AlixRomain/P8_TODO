@@ -37,16 +37,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in users %}
-                    <tr>
-                        <th scope="row">{{ loop.index }}</th>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.roles[0] }}</td>
-                        <td>
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
-                        </td>
-                    </tr>
+               {% for user in users %}
+                        {% if is_granted('EDIT', user) %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                 <td>{{ user.roles[0] }}</td>
+                                <td>
+                                    <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
+                                    {% if is_granted('DELETE', user) %}
+                                        <a href="{{ path('user_delete', {'id' : user.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

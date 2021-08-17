@@ -86,7 +86,11 @@ class TaskController extends AbstractController
     {
         $users = $this->repoUser->findAll();
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task, array('users'=> $users));
+        $form = $this->createForm(TaskType::class, $task,[
+            'action' => $this->generateUrl('task_create'),
+            'method' => 'GET',
+            'users'=> $users
+        ]);
 
         $form->handleRequest($request);
 
@@ -110,11 +114,14 @@ class TaskController extends AbstractController
     public function editAction(Task $task, Request $request)
     {
         $users = $this->repoUser->findAll();
-        $form = $this->createForm(TaskType::class, $task, array('users'=> $users));
+        $form = $this->createForm(TaskType::class, $task,[
+            'action' => $this->generateUrl('task_edit', ['id' => $task->getId()]),
+            'method' => 'GET',
+            'users'=> $users
+        ]);
 
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 

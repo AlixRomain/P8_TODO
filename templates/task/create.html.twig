@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="row col-6 m-lg-auto">
-        {{ form_start(form, {'action' : path('task_create')}) }}
+        {{ form_start(form, {'action' : path('task_create'), 'method': 'GET'}) }}
         {{ form_widget(form) }}
         <div class="text-center mb-3">
             <button type="submit" class="btn btn-success pull-right  text-center">Ajouter</button>

@@ -57,6 +57,7 @@ class UserController extends AbstractController
             }
         }
         ($param =='all')?$toto = true: $toto = null;
+        $user= $this->repoUser->findAll();
         return $this->render('user/list.html.twig', [
             'users' => ($toto)?$this->repoUser->findAll():$param,
             'form' =>  $form->createView()
@@ -70,17 +71,16 @@ class UserController extends AbstractController
     public function createAction(Request $request )
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user,[
+            'action' => $this->generateUrl('user_create'),
+            'method' => 'GET',
+        ]);
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setRoles([$request->get('user')['role']]);
             $password =$this->hasher->hashPassword($user, $user->getPassword());
-            $user->setEmail($user->getEmail());
-            $user->setName($user->getName());
             $user->setPassword($password);
-
             $this->em->persist($user);
             $this->em->flush();
 
@@ -105,14 +105,16 @@ class UserController extends AbstractController
      */
     public function editAction(User $userId, Request $request)
     {
-        $form = $this->createForm(UserEditType::class, $userId);
+        $form = $this->createForm(UserEditType::class, $userId,[
+            'action' => $this->generateUrl('user_edit', ['id' => $userId->getId()]),
+            'method' => 'GET',
+        ]);
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $userId->setRoles([$request->get('user_edit')['role']]);
-            $password =$this->hasher->hashPassword($userId, $userId->getPassword());
-            $userId->setPassword($password);
+           $userId->setRoles([$request->get('user_edit')['role']]);
+           $password =$this->hasher->hashPassword($userId, $userId->getPassword());
+           $userId->setPassword($password);
 
             $this->getDoctrine()->getManager()->flush();
 
@@ -122,5 +124,21 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $userId]);
+    }
+    /**
+     * User deletion
+     *
+     * @Route("/users/{id}/delete", name="user_delete")
+     * @IsGranted("DELETE", subject="userToDelete")
+     * @param User $userToDelete
+     *
+     * @return Response
+     */
+    public function deleteAction(User $userToDelete)
+    {
+        $this->em->remove($userToDelete);
+        $this->em->flush();
+        $this->addFlash('success', 'L\'utilisateur a bien été supprimé');
+        return $this->redirectToRoute('all-users', ['param' => 'all']);
     }
 }

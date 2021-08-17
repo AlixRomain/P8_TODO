@@ -2,16 +2,15 @@
 
 namespace App\Tests;
 
-use App\Repository\UserRepository;
-use App\Tests\Utils;
+
 use DateTime;
 use App\Entity\Task;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HTTPFoundation\Response;
 
 class TaskControllerTest extends Utils
-{ public function setUp():void
+{
+    public function setUp():void
     {
         parent::setUp();
     }
@@ -77,24 +76,24 @@ class TaskControllerTest extends Utils
              {
                  $client = $this::createClientNav('user@gmail.com');
 
+
                  // Create task with form
                  $crawler = $client[0]->request('GET', '/tasks/create');
 
-                 $form = $crawler->selectButton('Ajouter')->form();
-
+                $form = $crawler->selectButton('Ajouter')->form();
                  $form['task[title]'] = 'Tâche_Test';
                  $form['task[content]'] = 'Tâche de Test';
-                 $form['task[deadline][month]'] = '09';
-                 $form['task[deadline][day]'] = '19';
-                 $form['task[deadline][year]'] = '2021';
-
+                 $form['task[deadline][month]'] = 9;
+                 $form['task[deadline][day]'] = 19;
+                 $form['task[deadline][year]'] = 2021;
+                 $form['task[targetUser]'] = 3;
                  $crawler = $client[0]->submit($form);
-                 static::assertResponseIsSuccessful();
+                 $crawler = $client[0]->followRedirect();
 
-                 static::assertSelectorNotExists("div.alert", 'La tâche a été bien été ajoutée.');
+                 static::assertSelectorTextSame("div.alert", 'Superbe ! La tâche a été bien été ajoutée.');
              }
 
-                 public function testCreateTaskActionUniqueEntity()
+             public function testCreateTaskActionUniqueEntity()
                  {
                      $client = $this::createClientNav('user@gmail.com');
 
@@ -108,9 +107,9 @@ class TaskControllerTest extends Utils
 
                      $form['task[title]'] = $task->getTitle();
                      $form['task[content]'] = 'Tâche Unique Entity Test';
-                     $form['task[deadline][month]'] = '09';
-                     $form['task[deadline][day]'] = '19';
-                     $form['task[deadline][year]'] = '2021';
+                     $form['task[deadline][month]'] = 9;
+                     $form['task[deadline][day]'] = 19;
+                     $form['task[deadline][year]'] = 2021;
 
                      $crawler = $client[0]->submit($form);
                      static::assertResponseIsSuccessful();
@@ -123,7 +122,7 @@ class TaskControllerTest extends Utils
                      static::assertSame(count($tasks), 1);
                  }
 
-                    public function testEditTask()
+                 public function testEditTask()
                     {
                         $client = $this::createClientNav('user@gmail.com');
                         // Go to the edition page of the task id = 1
@@ -136,7 +135,9 @@ class TaskControllerTest extends Utils
                         $form['task[title]'] = 'Tâche_Edition_Test';
                         $form['task[content]'] = 'Tâche Edition Test';
                         $crawler = $client[0]->submit($form);
-                        static::assertSame(302, $client[0]->getResponse()->getStatusCode());
+                        $crawler = $client[0]->followRedirect();
+
+                        static::assertSelectorTextSame("div.alert", 'Superbe ! La tâche a bien été modifiée.');
 
                         // Assert task is in DB and contains what we expect
                         $editedTask = $client[1]->getRepository(Task::class)->findOneBy(['title' => 'Tâche_Edition_Test']);
@@ -177,7 +178,7 @@ class TaskControllerTest extends Utils
                             static::assertSame(count($tasks), 1);
                         }
 
-                     /*   public function testToggleTaskAction()
+                        public function testToggleTaskAction()
                         {
                             $client = $this::createClientNav('user@gmail.com');
 
@@ -195,7 +196,10 @@ class TaskControllerTest extends Utils
 
                             // Mark as done
                             $crawler = $client[0]->request('GET', '/tasks/'.$task->getId().'/toggle');
-                            static::assertSame(301, $client[0]->getResponse()->getStatusCode());
+                            $crawler = $client[0]->followRedirect();
+
+                            // Assert flash message is displayed
+                            static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche ' . $task->getTitle() . ' a bien été marquée comme faite.');
                             //Go to task Done
                             $crawler = $client[0]->request('GET', '/tasks-all/all');
                             $form = $crawler->selectButton('Go')->form();
@@ -220,9 +224,9 @@ class TaskControllerTest extends Utils
                             $client[1]->close();
                             $doneTask = $client[1]->getRepository(Task::class)->findOneBy(['id' => 1]);
                             static::assertTrue($doneTask->getIsDone());
-                        }*/
+                        }
 
-                          /* public function testDeleteTaskActionRoleUser()
+                          public function testDeleteTaskActionRoleUser()
                            {
                                $client = $this::createClientNav('user@gmail.com');
 
@@ -266,10 +270,10 @@ class TaskControllerTest extends Utils
                                // Assert that task no longer exist in database
                                $task = $client[1]->getRepository(Task::class)->findOneBy(['id' => 18]);
                               static::assertNull($task);
-                               static::assertSame(404, $client[0]->getResponse()->getStatusCode());
-                           }*/
+                               static::assertSame(200, $client[0]->getResponse()->getStatusCode());
+                           }
 
-                              /* public function testDeleteTaskActionRoleAdmin()
+                               public function testDeleteTaskActionRoleAdmin()
                                {
                                    $client = $this::createClientNav('admin@gmail.com');
 
@@ -304,13 +308,13 @@ class TaskControllerTest extends Utils
                                    // Assert that task no longer exist in database
                                    $task = $client[1]->getRepository(Task::class)->findOneBy(['id' => 14]);
                                    static::assertNull($task);
-                               }*/
-    /*
+                               }
+
                                  /**
                                   * Test of unused (Symfony native) function of Task Entity
                                   */
 
-        public function testTaskEntityFunction()
+       public function testTaskEntityFunction()
         {
             $tools = $this::getTools();
             // Get task from DB
