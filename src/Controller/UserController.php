@@ -7,6 +7,7 @@ use App\Form\FilterUserType;
 use App\Form\UserEditType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Services\FilterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -28,7 +29,6 @@ class UserController extends AbstractController
         $this->em = $entityManager;
         $this->hasher = $hashe;
         $this->repoUser = $repoUser;
-
     }
 
     /**
@@ -36,30 +36,16 @@ class UserController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @param $param string
      */
-    public function listAction($param, Request $request)
+    public function listAction($param, Request $request, FilterService $filterService)
     {
         $form = $this->createForm(FilterUserType::class,['csrf_protection' => false, 'method' => 'GET']);
-
         $form->handleRequest($request);
         if(isset($request->get('filter_user')['filterUser'])){
-            $param = $request->get('filter_user')['filterUser'];
+            $filter = $request->get('filter_user')['filterUser'];
+            $param = $filterService->filterUser($filter);
         }
 
-        if ( $param) {
-            switch ($param) {
-                case 'all':
-                    $param = 'all';
-                    break;
-                case 0:
-                    $param = $this->repoUser->findByRole('ROLE_ADMIN');
-                    break;
-                case 1:
-                    $param = $this->repoUser->findByRole('ROLE_USER');
-                    break;
-            }
-        }
         ($param =='all')?$toto = true: $toto = null;
-        $user= $this->repoUser->findAll();
         return $this->render('user/list.html.twig', [
             'users' => ($toto)?$this->repoUser->findAll():$param,
             'form' =>  $form->createView()
@@ -96,13 +82,9 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
-     * @Security(
-     *      "user === userId || is_granted('ROLE_ADMIN')",
-     *      message = "Vous n'avez pas les droits pour modifier cette utilisateur"
-     * )
+     * @IsGranted("EDIT", subject="userId")
      * @param User    $userId
      * @param Request $request
-     *
      * @return RedirectResponse|Response
      */
     public function editAction(User $userId, Request $request)

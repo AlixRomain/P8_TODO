@@ -22,7 +22,7 @@ class UserVoter extends Voter
     protected function supports(string $attribute, $subject): bool
     {
         //Lance le voteOnAttribute() si l'attribut est dans le tableau et que le subject est une instance de la classe User
-        return in_array($attribute, ['EDIT', 'ROLE_EDITION', 'DELETE'])
+        return in_array($attribute, ['EDIT', 'ROLE_EDITION', 'DELETE','DELETE_TASK'])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -53,6 +53,15 @@ class UserVoter extends Voter
             //Return True si le userconnecter n'est pas le user $subject mais que son rôle est ceui du superAdmin
             case 'DELETE':
                 if ($user !== $subject && $this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                    return true;
+                }
+                break;
+            case 'DELETE_TASK':
+                if($user == $subject && $this->security->isGranted('ROLE_USER')){
+                    return true;
+                }elseif ($user !== $subject && $this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                    return true;
+                }elseif (($user !== $subject && $this->security->isGranted('ROLE_ADMIN')) &&( $subject->getName() =='UserAnon')) {
                     return true;
                 }
                 break;

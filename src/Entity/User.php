@@ -147,7 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -191,8 +191,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+
     }
 
     /**
@@ -252,7 +251,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTargetTask(Task $targetTask): self
     {
         if ($this->targetTask->removeElement($targetTask)) {
-            // set the owning side to null (unless already changed)
+
             if ($targetTask->getTargetUser() === $this) {
                 $targetTask->setTargetUser(null);
             }

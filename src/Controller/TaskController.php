@@ -7,6 +7,7 @@ use App\Form\FilterType;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
+use App\Services\FilterService;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Client\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -31,31 +32,13 @@ class TaskController extends AbstractController
      * @Route("/tasks-all/{param}", name="all_tasks")
      * @param $param string
      */
-    public function listAction($param, Request $request)
+    public function listAction($param, Request $request, FilterService $filterService)
     {
         $form = $this->createForm(FilterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $param = $request->get('filter')['filter'];
-            switch ($param) {
-                case 'all':
-                    break;
-                case 0:
-                    $param = $this->getDoctrine()->getRepository('App:Task')->findBy([],['deadLine' => 'ASC']);
-                    break;
-                case 1:
-                    $param = $this->getDoctrine()->getRepository('App:Task')->findBy(['id' =>'id > 0']);
-                    break;
-                case 2:
-                    $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => 1]);
-                    break;
-                case 3:
-                    $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['isDone' => 0]);
-                    break;
-                case 4:
-                    $param =  $this->getDoctrine()->getRepository('App:Task')->findBy(['targetUser' => $this->getUser()]);
-                    break;
-            }
+            $filter = $request->get('filter')['filter'];
+            $param = $filterService->filterTask($filter);
         }
         ($param =='all')?$toto = true: $toto = null;
             return $this->render('task/list.html.twig',
