@@ -15,6 +15,7 @@ class UserControllerTest extends Utils
     {
         parent::setUp(false);
     }
+    //Assert ROLE_ADMIN can't access other Users with ROLE equal
    public function testListAction()
     {
         $client = $this::createClientNav('admin@gmail.com');
@@ -33,6 +34,7 @@ class UserControllerTest extends Utils
         static::assertNotContains('UserAnon', $text);
         static::assertNotContains('SuperAdmin', $text);
     }
+
     public function testListActionByTargetUser()
     {
         $client = $this::createClientNav('admin@gmail.com');
@@ -51,7 +53,7 @@ class UserControllerTest extends Utils
         static::assertNotContains('ROLE_ADMIN', $links);
         static::assertContains('ROLE_USER', $links);
     }
-
+    //Create one user with Admin Role
    public function testCreateUserAction()
     {
          $client = $this::createClientNav('admin@gmail.com');
@@ -88,7 +90,7 @@ class UserControllerTest extends Utils
          static::assertSame('user-test@gmail.com', $user->getEmail());
          static::assertSame(array('ROLE_USER'), $user->getRoles());
     }
-
+        //Assert Role_user can't create a new user
        public function testCreateActionRoleUser()
        {
            $client = $this::createClientNav('user@gmail.com');
@@ -98,7 +100,7 @@ class UserControllerTest extends Utils
            static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
        }
 
-
+       //Update one user profile from one Admin account
       public function testEditUserAction()
       {
           $client = $this::createClientNav('admin@gmail.com');
@@ -130,7 +132,7 @@ class UserControllerTest extends Utils
           static::assertSame(array('ROLE_USER'), $user->getRoles());
       }
 
-
+    //assert role-user can't update other usere account
     public function testEditActionRoleUser()
     {
         $client = $this::createClientNav('user-update@gmail.com');
@@ -164,6 +166,7 @@ class UserControllerTest extends Utils
         static::assertNull($task->getUser());
     }
 
+    //test delete one profile user with a Admin account
         public function testDeleteActionUser()
         {
             $client = $this::createClientNav('superadmin@gmail.com');
@@ -187,7 +190,7 @@ class UserControllerTest extends Utils
             static::assertNotContains('UserUpdate', $text);
 
         }
-
+            //Assert to access is impossible if a user is not logged
            public function testAccessUserPageWhenNotConnected()
             {
                 $client = $this::getClientCx();

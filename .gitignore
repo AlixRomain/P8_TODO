@@ -13,8 +13,11 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-
-###> phpunit/phpunit ###
+###> symfony/phpunit-bridge ###
+.phpunit
 /phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
+###< symfony/phpunit-bridge ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###

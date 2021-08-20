@@ -48,12 +48,12 @@
                             <p class="card-text">{{ task.content }}.</p>
                             <hr>
                             <div class="d-flex justify-content-around">
-                                {% if app.user and app.user.roles[0] != 'ROLE_USER' %}
+                                {% if is_granted('DELETE_TASK', task.user) %}
                                 <form action="{{ path('task_delete', {'id' : task.id }) }}">
                                     <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
                                 </form>
                                 {% endif %}
-                                {% if not task.isDone %}
+                                {% if not task.isDone and is_granted('DELETE_TASK', task.user)%}
                                     <form action="{{ path('task_edit', {'id' : task.id }) }}">
                                         <button class="btn btn-info btn-sm pull-right">Modifier</button>
                                     </form>
