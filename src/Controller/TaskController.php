@@ -32,7 +32,7 @@ class TaskController extends AbstractController
      * @Route("/tasks-all/{param}", name="all_tasks")
      * @param $param string
      */
-    public function listAction($param, Request $request, FilterService $filterService)
+    public function list($param, Request $request, FilterService $filterService)
     {
         $form = $this->createForm(FilterType::class);
         $form->handleRequest($request);
@@ -43,7 +43,7 @@ class TaskController extends AbstractController
         ($param =='all')?$toto = true: $toto = null;
             return $this->render('task/list.html.twig',
                                  [
-                                     'tasks' => ($toto)?$this->getDoctrine()->getRepository('App:Task')->findAll():$param,
+                                     'tasks' => ($toto)?$this->getDoctrine()->getRepository('App:Task')->findBy([],['createdAt' => 'DESC']):$param,
                                      'form' =>  $form->createView()
                                  ]);
     }
@@ -57,7 +57,7 @@ class TaskController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction(Task $task)
+    public function show(Task $task)
     {
         return $this->render('task/show.html.twig', ['task' => $task]);
     }
@@ -65,7 +65,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function createAction(Request $request)
+    public function create(Request $request)
     {
         $users = $this->repoUser->findAll();
         $task = new Task();
@@ -94,7 +94,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
-    public function editAction(Task $task, Request $request)
+    public function edit(Task $task, Request $request)
     {
         $users = $this->repoUser->findAll();
         $form = $this->createForm(TaskType::class, $task,[
@@ -122,7 +122,7 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
      */
-    public function toggleTaskAction(Task $task)
+    public function toggleTask(Task $task)
     {
         $task->toggle(!$task->isDone());
         $this->getDoctrine()->getManager()->flush();
@@ -140,7 +140,7 @@ class TaskController extends AbstractController
      *      message = "Vous n'avez pas les droits pour supprimer cette tâche"
      * )
      */
-    public function deleteTaskAction(Task $task)
+    public function deleteTask(Task $task)
     {
         if($task){
             $em = $this->getDoctrine()->getManager();

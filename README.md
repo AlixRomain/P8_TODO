@@ -21,7 +21,7 @@ DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
 
 4 - Run composer.phar to install dependencies
 
-symfony console composer.phar update
+symfony console composer.phar install
 
 5 - Create the database
 

@@ -36,7 +36,7 @@ class UserController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @param $param string
      */
-    public function listAction($param, Request $request, FilterService $filterService)
+    public function list($param, Request $request, FilterService $filterService)
     {
         $form = $this->createForm(FilterUserType::class,['csrf_protection' => false, 'method' => 'GET']);
         $form->handleRequest($request);
@@ -56,7 +56,7 @@ class UserController extends AbstractController
      * @Route("/users/create", name="user_create")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function createAction(Request $request )
+    public function create(Request $request )
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user,[
@@ -87,7 +87,7 @@ class UserController extends AbstractController
      * @param Request $request
      * @return RedirectResponse|Response
      */
-    public function editAction(User $userId, Request $request)
+    public function edit(User $userId, Request $request)
     {
         $form = $this->createForm(UserEditType::class, $userId,[
             'action' => $this->generateUrl('user_edit', ['id' => $userId->getId()]),
@@ -118,7 +118,7 @@ class UserController extends AbstractController
      *
      * @return Response
      */
-    public function deleteAction(User $userToDelete)
+    public function delete(User $userToDelete)
     {
         $this->em->remove($userToDelete);
         $this->em->flush();
